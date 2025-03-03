@@ -1,12 +1,12 @@
 const normalCallout = {
   id: 1,
-  latitude: 30.26064905500077,
-  longitude: 120.14700833494362,
+  latitude: 23.141389,
+  longitude: 113.054909,
   width: 40,
   height: 50,
   iconPath: '/image/location.png',
   callout: {
-    content: '宝石山',
+    content: '校园巴士1',
     color: '#0066FF',
     fontSize: 14,
     borderWidth: 2,
@@ -18,7 +18,7 @@ const normalCallout = {
     textAlign: 'center'
   },
   label: {
-    content: '这里是宝石山',
+    content: '1号线首发站',
     fontSize: 10,
     textAlign: 'center',
     borderWidth: 1,
@@ -30,13 +30,13 @@ const normalCallout = {
 //标注点2
 const customCallout1 = {
   id: 2,
-  latitude: 30.258747261993033,
-  longitude: 120.15197366023278,
-  iconPath: '/image/location.png',
+  latitude: 23.139389,
+  longitude: 113.052909,
   width: 40,
   height: 50,
+  iconPath: '/image/location.png',
   callout: {
-    content: '断桥残雪',
+    content: '校园巴士2',
     color: '#7700BB',
     fontSize: 14,
     borderWidth: 2,
@@ -48,7 +48,7 @@ const customCallout1 = {
     textAlign: 'center'
   },
   label: {
-    content: '这里是断桥残雪',
+    content: '2号线首发站',
     fontSize: 10,
     textAlign: 'center',
     borderWidth: 1,
@@ -61,13 +61,13 @@ const customCallout1 = {
 
 const customCallout2 = {
   id: 3,
-  latitude: 30.255288366053747,
-  longitude: 120.14901183344466,
-  iconPath: '/image/location.png',
+  latitude: 23.142389,
+  longitude: 113.053909,
   width: 40,
   height: 50,
+  iconPath: '/image/location.png',
   callout: {
-    content: '白堤',
+    content: '校园巴士3',
     color: '#7700BB',
     fontSize: 14,
     borderWidth: 2,
@@ -79,7 +79,7 @@ const customCallout2 = {
     textAlign: 'center'
   },
   label: {
-    content: '这里是白堤',
+    content: '3号线首发站',
     fontSize: 10,
     textAlign: 'center',
     borderWidth: 1,
@@ -91,13 +91,13 @@ const customCallout2 = {
 //标注点4
 const customCallout3 = {
   id: 4,
-  latitude: 30.25456060231621,
-  longitude: 120.1463731200422,
-  iconPath: '/image/location.png',
+  latitude: 23.138389,
+  longitude: 113.054909,
   width: 40,
   height: 50,
+  iconPath: '/image/location.png',
   callout: {
-    content: '千里湖',
+    content: '校园巴士4',
     color: '#FF0000',
     fontSize: 14,
     borderWidth: 2,
@@ -109,7 +109,7 @@ const customCallout3 = {
     textAlign: 'center'
   },
   label: {
-    content: '这里是千里湖',
+    content: '4号线首发站',
     fontSize: 10,
     textAlign: 'center',
     borderWidth: 1,
@@ -127,8 +127,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    latitude: "30.256517049608455",
-    longitude: "120.1503332472505",
+    latitude: "23.140389",
+    longitude: "113.053909",
     markers: allMarkers,
     latitude_a: '',
     longitude_a: '',
@@ -143,25 +143,47 @@ Page({
   },
   //搜索位置
   startSearch() {
-    wx.chooseLocation({
-      latitude: "30.256517049608455" * 1,
-      longitude: "120.1503332472505" * 1,
-    })
-      .then(res => {
-        console.log('搜索位置:' + res.name);
+    // 模拟巴士数据
+    const buses = [
+      { id: 1, name: '校园巴士1', status: '运行中', location: { latitude: 23.141389, longitude: 113.054909 } },
+      { id: 2, name: '校园巴士2', status: '运行中', location: { latitude: 23.139389, longitude: 113.052909 } },
+      { id: 3, name: '校园巴士3', status: '停靠中', location: { latitude: 23.142389, longitude: 113.053909 } },
+      { id: 4, name: '校园巴士4', status: '运行中', location: { latitude: 23.138389, longitude: 113.054909 } }
+    ];
+
+    wx.showActionSheet({
+      itemList: buses.map(bus => `${bus.name} (${bus.status})`),
+      success: (res) => {
+        const selectedBus = buses[res.tapIndex];
+        // 更新地图中心点到所选巴士位置
         this.setData({
-          latitude_a: res.latitude,
-          longitude_a: res.longitude,
-          name: res.name
-        })
+          latitude: selectedBus.location.latitude.toString(),
+          longitude: selectedBus.location.longitude.toString(),
+          name: selectedBus.name
+        });
 
-      })
-      .catch(err => {
-        console.log('err', err);
-      })
-
-
+        // 显示巴士信息
+        wx.showToast({
+          title: `${selectedBus.name} - ${selectedBus.status}`,
+          icon: 'none',
+          duration: 2000
+        });
+      },
+      fail(res) {
+        console.log(res.errMsg);
+      }
+    });
   },
+
+  queryRoute() {
+    // 暂时显示开发中提示
+    wx.showToast({
+      title: '路线查询功能开发中',
+      icon: 'none',
+      duration: 2000
+    });
+  },
+
   /**
    * 地点地图事件
    * @param {*} e 
@@ -171,21 +193,6 @@ Page({
     this.setData({
       latitude_a: e.detail.latitude,
       longitude_a: e.detail.longitude
-    })
-  },
-  // 开始导航 到app导航
-  startMap() {
-    let latitude_a = this.data.longitude_a * 1
-    let longitude_a = this.data.longitude_a * 1
-    wx.openLocation({
-      latitude: latitude_a,
-      longitude: longitude_a,
-      success(res) {
-        console.log('su', res);
-      },
-      fail(err) {
-        console.log('er', err);
-      }
     })
   },
   // 点击标注图标

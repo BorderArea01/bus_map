@@ -1,1 +1,47 @@
 /* pages/search/search.wxss */
+.bus-list {
+  padding: 20rpx;
+}
+
+.bus-item {
+  background: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+}
+
+.bus-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.bus-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.bus-status {
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.bus-status.running {
+  background: #e8f5e9;
+  color: #1aad19;
+}
+
+.bus-status.stopped {
+  background: #ffeaea;
+  color: #ff4d4f;
+}
+
+.bus-route {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 10rpx;
+}

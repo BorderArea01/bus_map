@@ -22,26 +22,5 @@
   },
   "componentFramework": "glass-easel",
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents",
-  "tabBar": {
-    "list": [{
-      "pagePath": "pages/index/index",
-      "text": "导航",
-      "iconPath": "",
-      "selectedIconPath": ""
-    },
-    {
-      "pagePath": "pages/search/search",
-      "text": "搜索",
-      "iconPath": "",
-      "selectedIconPath": ""
-    },
-    {
-      "pagePath": "pages/mark/mark",
-      "text": "标注",
-      "iconPath": "",
-      "selectedIconPath": ""
-    }
-  ]
-  }
+  "lazyCodeLoading": "requiredComponents"
 }

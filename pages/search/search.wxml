@@ -1,1 +1,11 @@
 <button type="primary" bindtap="startSearch">开始搜索</button>
+
+<view class="bus-list">
+  <view class="bus-item" wx:for="{{buses}}" wx:key="id" bindtap="selectBus" data-bus="{{item}}">
+    <view class="bus-info">
+      <view class="bus-name">{{item.name}}</view>
+      <view class="bus-status {{item.status === '运行中' ? 'running' : 'stopped'}}">{{item.status}}</view>
+    </view>
+    <view class="bus-route">{{item.route}}</view>
+  </view>
+</view>

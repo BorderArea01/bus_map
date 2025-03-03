@@ -1,14 +1,4 @@
-<view class="button-container">
-  <view class="main-buttons">
-    <button type="primary" class="custom-btn search-btn" bindtap="startSearch">搜索</button>
-    <button type="primary" class="custom-btn nav-btn" bindtap="startMap">导航</button>
-  </view>
-  <view class="menu-btn" bindtap="toggleMenu">
-    <view class="menu-icon {{isMenuOpen ? 'open' : ''}}"></view>
-  </view>
-</view>
-
-<map longitude="{{longitude}}" bindtap="mapBindtap" bindcallouttap="callouttap"  bindmarkertap="markertap" bindlabeltap="labeltap" markers="{{markers}}" latitude="{{latitude}}" />
+<map longitude="{{longitude}}" bindtap="mapBindtap" bindcallouttap="callouttap" bindmarkertap="markertap" bindlabeltap="labeltap" markers="{{markers}}" latitude="{{latitude}}" />
 
 <!-- <view class="location-info">
   <view class="info-item">
@@ -32,6 +22,15 @@
     <view class="menu-item" bindtap="handleMenuItem" data-type="history">历史记录</view>
     <view class="menu-item" bindtap="handleMenuItem" data-type="settings">设置</view>
     <view class="menu-item" bindtap="handleMenuItem" data-type="about">关于</view>
+  </view>
+</view>
+
+<!-- 添加底部导航栏 -->
+<view class="bottom-nav">
+  <button type="primary" class="nav-btn search-btn" bindtap="startSearch">搜索</button>
+  <button type="primary" class="nav-btn route-btn" bindtap="queryRoute">查询路线</button>
+  <view class="menu-btn" bindtap="toggleMenu">
+    <view class="menu-icon {{isMenuOpen ? 'open' : ''}}"></view>
   </view>
 </view>
 

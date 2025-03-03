@@ -1,0 +1,85 @@
+﻿1、 本接口程序只适用于IDTK客流计数终端的数据上传及参数下载，将iDTK_WebService.rar压缩包解压到硬盘任意文件夹，如 D:\iDTK_WebService
+
+2、数据库使用SQL SERVER 2008 或2005 版本，搭建平台前请先自行安装数据库，并按要求安装相应补丁程序，iDTKdata-2008.bak和iDTKdata-2005.bak是数据库备份文件，按数据库版本选择文件还原到数据库。如果您使用SQL SERVER 2008数据库,
+请将"阻止保存要求重新创建表的更改"选择去掉 (工具--选项--设计器--表设计器和数据库设计器)
+
+3、IIS要求6.0或以上版本,IIS环境需要完整，
+
+4、新建网站，文件目录为D:\iDTK_WebService ， 并将该网站的默认首页设置为DataService.asmx， 修改web.config文件， 配置对应服务器名称、数据库名称和SA密码。
+
+5、计数器配置 请参照计数器说明书操作，正确配置所使用的WIFI名称、密码， 服务器地址输入新服务器地址， 比如：192.168.12.100 不能带DataService.asmx
+     
+<connectionStrings>
+<add name="sqlConnectionString" connectionString="Data Source=名称;Initial Catalog=数据库名称;User ID=sa;pwd=密码;" providerName="System.Data.SqlClient"/>
+</connectionStrings>
+
+5、数据库说明
+
+表ut_device_info 用来记录不同设备的配置参数， 当有新IDTK客流计数终端连接到服务器时，以默认参数自动创建一条记录。修改这些参数后，在固定周期内IDTK客流计数终端会将该参数同步至设备端并执行。
+
+id  (int)             记录编号
+sn  (varchar50)       设备唯一序列号
+direction (int)       设备计数方向   0表示正方向， 1表示反方向
+UploadCycle  (int)    设备上传周期（单位分钟），0表示实时上传， 可设置范围1-240分钟
+RecordCycle  (int)    设备流水记录周期 （单位分钟），0表示实时记录， 可设置范围1-240分钟
+speed  (int)          设备位置目标运动速度，  0表示低速（10KM/H以下） ， 1表示高速（25KM/H以下），高速模式下耗电量增加20%
+DisableShowCount  (int)   设备屏幕显示内容   2双向数据， 1进出两方向总计数据， 0无数据显示
+tm_Open  (varchar10)  计数开始时间
+tm_Close (varchar10)  计数停止时间
+mac1 (varchar20)      周围环境WIFI1 名称
+mac2 (varchar20)      周围环境WIFI2 名称
+mac3 (varchar20)      周围环境WIFI3 名称
+signal_strength1  (int)   周围环境WIFI1  信号强度
+signal_strength2  (int)   周围环境WIFI2  信号强度
+signal_strength3  (int)   周围环境WIFI3  信号强度     可用做设备安装位置的定位
+password     (varchar50)  设备数据浏览密码 
+
+======================================================
+
+
+6、接口程序当接收到IDTK客流计数终端上传的数据时，会自动根据上传的记录时间创建记录流水表，以ut_datalist_XXXX命名，其中XXXX表示年份；
+如： 2016年的数据保存在ut_datalist_2016表内 ； 2017年数据保存在ut_datalist_2017 表内，以此类推。
+
+表ut_datalist_XXXX
+
+sn  (varchar50)    设备唯一序列号
+dt_data (varchar30)   设备记录时间
+dt_upload (varchar30) 设备记录上传时间
+up (int)              设备记录进方向数据
+down (int)            设备记录出方向数据
+batvoltage (int)      发射器设备电池剩余电量  单位%
+batpercent (int)      计数器设备电池剩余电量  单位%
+losefocus             设备对焦状态   0表示正常, 1表示失焦(被遮挡)
+charge (int)          设备充电标志  0表示不在充电状态， 2 表示在充电状态  
+softversion (int)     设备固件版本
+lid (uniqueidentifier)   记录ID
+
+
+7、数据演示
+  web文件夹是一个简单的数据报表网站，用IIS，以该文件夹新建一个网站，修改web.config文件， 配置对应服务器名称、数据库名称和SA密码， 即可通过简单的报表查询功能浏览计数器上传数据。
+使用WEB页面浏览数据前，必须在数据库表ut_device_info的password字段 设置密码，或将该字段设置为默认值。     
+
+<connectionStrings>
+<add name="sqlConnectionString" connectionString="Data Source=名称;Initial Catalog=数据库名称;User ID=sa;pwd=密码;" providerName="System.Data.SqlClient"/>
+</connectionStrings>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
