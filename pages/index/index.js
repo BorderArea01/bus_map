@@ -1,125 +1,108 @@
-const normalCallout = {
+// 根据拥挤程度获取对应的颜色
+const getCrowdLevelColor = (crowdLevel) => {
+  switch (crowdLevel) {
+    case 'free':
+      return '#52c41a';  // 绿色
+    case 'normal':
+      return '#1890ff';  // 蓝色
+    case 'crowded':
+      return '#faad14';  // 黄色
+    default:
+      return '#000000';
+  }
+};
+
+// 巴士标记
+const bus1 = {
   id: 1,
-  latitude: 23.141389,
-  longitude: 113.054909,
+  latitude: 27.920283,
+  longitude: 120.694047,
   width: 40,
-  height: 50,
-  iconPath: '/image/location.png',
+  height: 40,
+  iconPath: '/image/bus.png',
+  crowdLevel: 'normal',
   callout: {
-    content: '校园巴士1',
-    color: '#0066FF',
+    content: '巴士1号',
+    color: '#1890ff',
     fontSize: 14,
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#000000',
+    borderColor: '#1890ff',
     bgColor: '#fff',
     padding: 5,
     display: 'ALWAYS',
     textAlign: 'center'
-  },
-  label: {
-    content: '1号线首发站',
-    fontSize: 10,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    bgColor: '#fff',
-    padding: 5
   }
-}
-//标注点2
-const customCallout1 = {
+};
+
+const bus2 = {
   id: 2,
-  latitude: 23.139389,
-  longitude: 113.052909,
+  latitude: 27.916283,
+  longitude: 120.690047,
   width: 40,
-  height: 50,
-  iconPath: '/image/location.png',
+  height: 40,
+  iconPath: '/image/bus.png',
+  crowdLevel: 'crowded',
   callout: {
-    content: '校园巴士2',
-    color: '#7700BB',
+    content: '巴士2号',
+    color: '#faad14',
     fontSize: 14,
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#000000',
+    borderColor: '#faad14',
     bgColor: '#fff',
     padding: 5,
     display: 'ALWAYS',
     textAlign: 'center'
-  },
-  label: {
-    content: '2号线首发站',
-    fontSize: 10,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    bgColor: '#fff',
-    padding: 5
   }
-}
-//标注点3
+};
 
-const customCallout2 = {
+const bus3 = {
   id: 3,
-  latitude: 23.142389,
-  longitude: 113.053909,
+  latitude: 27.919283,
+  longitude: 120.691047,
   width: 40,
-  height: 50,
-  iconPath: '/image/location.png',
+  height: 40,
+  iconPath: '/image/bus.png',
+  crowdLevel: 'free',
   callout: {
-    content: '校园巴士3',
-    color: '#7700BB',
+    content: '巴士3号',
+    color: '#52c41a',
     fontSize: 14,
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#000000',
+    borderColor: '#52c41a',
     bgColor: '#fff',
     padding: 5,
     display: 'ALWAYS',
     textAlign: 'center'
-  },
-  label: {
-    content: '3号线首发站',
-    fontSize: 10,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    bgColor: '#fff',
-    padding: 5
   }
-}
-//标注点4
-const customCallout3 = {
-  id: 4,
-  latitude: 23.138389,
-  longitude: 113.054909,
-  width: 40,
-  height: 50,
-  iconPath: '/image/location.png',
-  callout: {
-    content: '校园巴士4',
-    color: '#FF0000',
-    fontSize: 14,
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: '#000000',
-    bgColor: '#fff',
-    padding: 5,
-    display: 'ALWAYS',
-    textAlign: 'center'
-  },
-  label: {
-    content: '4号线首发站',
-    fontSize: 10,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    bgColor: '#fff',
-    padding: 5
-  }
-}
+};
 
-const allMarkers = [normalCallout, customCallout1, customCallout2, customCallout3]
+const bus4 = {
+  id: 4,
+  latitude: 27.917283,
+  longitude: 120.693047,
+  width: 40,
+  height: 40,
+  iconPath: '/image/bus.png',
+  crowdLevel: 'crowded',
+  callout: {
+    content: '巴士4号',
+    color: '#faad14',
+    fontSize: 14,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: '#faad14',
+    bgColor: '#fff',
+    padding: 5,
+    display: 'ALWAYS',
+    textAlign: 'center'
+  }
+};
+
+// 合并所有标记
+const allMarkers = [bus1, bus2, bus3, bus4];
 
 Page({
 
@@ -127,12 +110,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    latitude: "23.140389",
-    longitude: "113.053909",
+    latitude: "27.918283",
+    longitude: "120.692047",
     markers: allMarkers,
     latitude_a: '',
     longitude_a: '',
-    isMenuOpen: false
+    isMenuOpen: false,
+    showPopup: false,
+    selectedBus: null
   },
 
   /**
@@ -145,10 +130,10 @@ Page({
   startSearch() {
     // 模拟巴士数据
     const buses = [
-      { id: 1, name: '校园巴士1', status: '运行中', location: { latitude: 23.141389, longitude: 113.054909 } },
-      { id: 2, name: '校园巴士2', status: '运行中', location: { latitude: 23.139389, longitude: 113.052909 } },
-      { id: 3, name: '校园巴士3', status: '停靠中', location: { latitude: 23.142389, longitude: 113.053909 } },
-      { id: 4, name: '校园巴士4', status: '运行中', location: { latitude: 23.138389, longitude: 113.054909 } }
+      { id: 1, name: '巴士1号', status: '运行中', location: { latitude: 27.920283, longitude: 120.694047 } },
+      { id: 2, name: '巴士2号', status: '运行中', location: { latitude: 27.916283, longitude: 120.690047 } },
+      { id: 3, name: '巴士3号', status: '停靠中', location: { latitude: 27.919283, longitude: 120.691047 } },
+      { id: 4, name: '巴士4号', status: '运行中', location: { latitude: 27.917283, longitude: 120.693047 } }
     ];
 
     wx.showActionSheet({
@@ -197,43 +182,64 @@ Page({
   },
   // 点击标注图标
   markertap(e) {
-    let index = e.markerId - 1
-    let marker = this.data.markers[index]
-    console.log(marker);
-
+    let marker = this.data.markers.find(m => m.id === e.markerId);
+    if (!marker) return;
 
     this.setData({
       longitude_a: marker.longitude,
       latitude_a: marker.latitude,
-      name: marker.callout.content
-    })
+      name: marker.callout.content,
+      selectedBus: {
+        name: marker.callout.content,
+        crowdLevel: marker.crowdLevel
+      },
+      showPopup: true
+    });
   },
 
   //点击标注文字 气泡触发
   callouttap(e) {
-    let index = e.markerId - 1
-    let marker = this.data.markers[index]
-    console.log(marker);
-
+    let marker = this.data.markers.find(m => m.id === e.markerId);
+    if (!marker) return;
 
     this.setData({
       longitude_a: marker.longitude,
       latitude_a: marker.latitude,
-      name: marker.callout.content
-    })
+      name: marker.callout.content,
+      selectedBus: {
+        name: marker.callout.content,
+        crowdLevel: marker.crowdLevel
+      },
+      showPopup: true
+    });
   },
   // 点击标签
   labeltap(e) {
-    let index = e.markerId - 1
-    let marker = this.data.markers[index]
-    console.log(marker);
-
+    let index = e.markerId - 1;
+    let marker = this.data.markers[index];
 
     this.setData({
       longitude_a: marker.longitude,
       latitude_a: marker.latitude,
-      name: marker.callout.content
-    })
+      name: marker.callout.content,
+      selectedBus: {
+        name: marker.callout.content,
+        crowdLevel: marker.crowdLevel
+      },
+      showPopup: true
+    });
+  },
+
+  // 隐藏弹窗
+  hidePopup() {
+    this.setData({
+      showPopup: false
+    });
+  },
+
+  // 阻止事件冒泡
+  stopPropagation() {
+    // 什么都不做，仅阻止事件冒泡
   },
 
   /**

@@ -45,3 +45,111 @@
   color: #666;
   margin-top: 10rpx;
 }
+
+/* 弹窗样式 */
+.crowd-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 999;
+}
+
+.crowd-popup.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-content {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  height: 100%;
+  background: #fff;
+  transition: right 0.3s ease-out;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.crowd-popup.show .popup-content {
+  right: 0;
+}
+
+.popup-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin: 40rpx 0;
+}
+
+.crowd-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40rpx 0;
+}
+
+.crowd-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.crowd-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 12rpx 24rpx;
+  border-radius: 10rpx;
+}
+
+.crowd-value.free {
+  color: #52c41a;
+  background: #f6ffed;
+}
+
+.crowd-value.comfortable {
+  color: #1890ff;
+  background: #e6f7ff;
+}
+
+.crowd-value.crowded {
+  color: #faad14;
+  background: #fff7e6;
+}
+
+.crowd-value.very_crowded {
+  color: #f5222d;
+  background: #fff1f0;
+}
+
+.popup-actions {
+  position: absolute;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  padding: 0 40rpx;
+}
+
+.select-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 32rpx;
+  border-radius: 44rpx;
+}
+
+.popup-close {
+  position: absolute;
+  top: 30rpx;
+  left: 30rpx;
+  font-size: 40rpx;
+  color: #999;
+  line-height: 1;
+  padding: 10rpx;
+} 

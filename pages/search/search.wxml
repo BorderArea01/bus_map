@@ -1,11 +1,31 @@
 <button type="primary" bindtap="startSearch">开始搜索</button>
 
 <view class="bus-list">
-  <view class="bus-item" wx:for="{{buses}}" wx:key="id" bindtap="selectBus" data-bus="{{item}}">
+  <view class="bus-item" wx:for="{{buses}}" wx:key="id" bindtap="showCrowdLevel" data-bus="{{item}}">
     <view class="bus-info">
       <view class="bus-name">{{item.name}}</view>
       <view class="bus-status {{item.status === '运行中' ? 'running' : 'stopped'}}">{{item.status}}</view>
     </view>
     <view class="bus-route">{{item.route}}</view>
+  </view>
+</view>
+
+<!-- 拥挤程度侧边栏 -->
+<view class="crowd-popup {{showPopup ? 'show' : ''}}" bindtap="hidePopup">
+  <view class="popup-content" catchtap="stopPropagation">
+    <view class="popup-close" bindtap="hidePopup">×</view>
+    <view class="popup-title">{{selectedBus.name}}</view>
+    <view class="crowd-info">
+      <text class="crowd-label">当前拥挤程度</text>
+      <text class="crowd-value {{selectedBus.crowdLevel}}">{{
+        selectedBus.crowdLevel === 'free' ? '空闲' :
+        selectedBus.crowdLevel === 'comfortable' ? '舒适' :
+        selectedBus.crowdLevel === 'crowded' ? '较拥挤' :
+        selectedBus.crowdLevel === 'very_crowded' ? '拥挤' : ''
+      }}</text>
+    </view>
+    <view class="popup-actions">
+      <button class="select-btn" type="primary" bindtap="selectCurrentBus">选择此车</button>
+    </view>
   </view>
 </view>

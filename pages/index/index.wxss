@@ -201,3 +201,105 @@ map{
   font-size: 28rpx;
   color: #333;
 }
+
+/* 弹窗样式 */
+.crowd-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  z-index: 999;
+}
+
+.crowd-popup.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-content {
+  position: fixed;
+  left: 0;
+  bottom: -100%;
+  width: 100%;
+  background: #fff;
+  transition: bottom 0.3s ease-out;
+  padding: 40rpx;
+  box-sizing: border-box;
+  border-radius: 20rpx 20rpx 0 0;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.crowd-popup.show .popup-content {
+  bottom: 0;
+}
+
+.popup-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin: 20rpx 0 40rpx;
+}
+
+.crowd-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30rpx 0;
+}
+
+.crowd-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.crowd-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 12rpx 24rpx;
+  border-radius: 10rpx;
+}
+
+.crowd-value.free {
+  color: #52c41a;
+  background: #f6ffed;
+}
+
+.crowd-value.normal {
+  color: #1890ff;
+  background: #e6f7ff;
+}
+
+.crowd-value.crowded {
+  color: #faad14;
+  background: #fff7e6;
+}
+
+.crowd-value.very_crowded {
+  color: #f5222d;
+  background: #fff1f0;
+}
+
+.popup-close {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  font-size: 40rpx;
+  color: #999;
+  line-height: 1;
+  padding: 10rpx;
+}
+
+/* 添加一个小横条作为视觉提示 */
+.popup-handle {
+  width: 40rpx;
+  height: 4rpx;
+  background: #e0e0e0;
+  border-radius: 2rpx;
+  margin: 0 auto 20rpx;
+}

@@ -15,6 +15,23 @@
   </view>
 </view> -->
 
+<!-- 拥挤程度底部弹窗 -->
+<view class="crowd-popup {{showPopup ? 'show' : ''}}" bindtap="hidePopup">
+  <view class="popup-content" catchtap="stopPropagation">
+    <view class="popup-handle"></view>
+    <view class="popup-close" bindtap="hidePopup">×</view>
+    <view class="popup-title">{{selectedBus.name}}</view>
+    <view class="crowd-info">
+      <text class="crowd-label">当前拥挤程度</text>
+      <text class="crowd-value {{selectedBus.crowdLevel}}">{{
+        selectedBus.crowdLevel === 'free' ? '空闲' :
+        selectedBus.crowdLevel === 'normal' ? '舒适' :
+        selectedBus.crowdLevel === 'crowded' ? '拥挤' : ''
+      }}</text>
+    </view>
+  </view>
+</view>
+
 <view class="menu-mask {{isMenuOpen ? 'show' : ''}}" bindtap="toggleMenu"></view>
 <view class="side-menu {{isMenuOpen ? 'open' : ''}}">
   <view class="menu-list">

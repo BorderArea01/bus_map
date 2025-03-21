@@ -10,7 +10,8 @@ Page({
         id: 1,
         name: '校园巴士1',
         status: '运行中',
-        route: '仙溪校区 - 河滨校区',
+        route: '',
+        crowdLevel: 'comfortable',
         location: {
           latitude: 23.141389,
           longitude: 113.054909
@@ -20,7 +21,8 @@ Page({
         id: 2,
         name: '校园巴士2',
         status: '运行中',
-        route: '河滨校区 - 江湾校区',
+        route: '',
+        crowdLevel: 'crowded',
         location: {
           latitude: 23.139389,
           longitude: 113.052909
@@ -30,7 +32,8 @@ Page({
         id: 3,
         name: '校园巴士3',
         status: '停靠中',
-        route: '仙溪校区 - 江湾校区',
+        route: '',
+        crowdLevel: 'free',
         location: {
           latitude: 23.142389,
           longitude: 113.053909
@@ -40,13 +43,16 @@ Page({
         id: 4,
         name: '校园巴士4',
         status: '运行中',
-        route: '环线：仙溪校区',
+        route: '',
+        crowdLevel: 'crowded',
         location: {
           latitude: 23.138389,
           longitude: 113.054909
         }
       }
-    ]
+    ],
+    showPopup: false,
+    selectedBus: null
   },
 
   /**
@@ -122,8 +128,32 @@ Page({
 
   },
 
-  selectBus(e) {
+  // 显示拥挤程度弹窗
+  showCrowdLevel(e) {
     const bus = e.currentTarget.dataset.bus;
+    this.setData({
+      selectedBus: bus,
+      showPopup: true
+    });
+  },
+
+  // 隐藏弹窗
+  hidePopup() {
+    this.setData({
+      showPopup: false
+    });
+  },
+
+  // 阻止事件冒泡
+  stopPropagation() {
+    // 什么都不做，仅阻止事件冒泡
+  },
+
+  // 选择当前显示的巴士
+  selectCurrentBus() {
+    const bus = this.data.selectedBus;
+    if (!bus) return;
+
     // 将选中的巴士信息存入全局数据
     const pages = getCurrentPages();
     const prevPage = pages[pages.length - 2]; // 获取上一个页面
