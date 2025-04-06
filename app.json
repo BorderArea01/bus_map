@@ -1,24 +1,14 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/search/search"
+    "pages/index/index"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "温商院-学生巴士",
-    "navigationBarBackgroundColor": "#ffffff"
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WZBC风车地图",
+    "navigationBarTextStyle": "black"
   },
-  "requiredPrivateInfos": [
-    "choosePoi",
-    "chooseLocation",
-    "chooseAddress"
-  ],
-  "permission": {
-    "scope.userLocation": {
-      "desc": "你的位置信息将用于小程序位置接口的效果展示"
-    }
-  },
-  "componentFramework": "glass-easel",
+  "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
 }

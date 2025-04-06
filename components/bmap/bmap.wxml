@@ -1,0 +1,15 @@
+<view class="bmap-container">
+  <map
+    id="bmap"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    enable-satellite="{{enableSatellite}}"
+    style="width: 100%; height: 100%;"
+    bindtap="handleTap"
+    bindmarkertap="handleMarkerTap"
+    bindcallouttap="handleCalloutTap"
+    bindlabeltap="handleLabelTap"
+  ></map>
+</view> 

@@ -1,53 +1,132 @@
-<map longitude="{{longitude}}" bindtap="mapBindtap" bindcallouttap="callouttap" bindmarkertap="markertap" bindlabeltap="labeltap" markers="{{markers}}" latitude="{{latitude}}" />
+<view class="map-container" wx:if="{{!mapError}}">
+  <bmap
+    id="bmap"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    enable-satellite="{{enableSatellite}}"
+    bindtap="mapBindtap"
+    bindmarkertap="markertap"
+    bindcallouttap="callouttap"
+    bindlabeltap="labeltap"
+    binderror="onMapError"
+  ></bmap>
+</view>
 
-<!-- <view class="location-info">
-  <view class="info-item">
-    <text class="label">位置:</text>
-    <text class="value">{{name}}</text>
-  </view>
-  <view class="info-item">
-    <text class="label">纬度:</text>
-    <text class="value">{{latitude_a}}</text>
-  </view>
-  <view class="info-item">
-    <text class="label">经度:</text>
-    <text class="value">{{longitude_a}}</text>
-  </view>
-</view> -->
+<view class="map-error" wx:if="{{mapError}}">
+  <view class="error-icon">!</view>
+  <view class="error-title">地图加载失败</view>
+  <view class="error-message">{{mapErrorMsg}}</view>
+  <button class="retry-button" bindtap="retryLoadMap">重试</button>
+</view>
 
-<!-- 拥挤程度底部弹窗 -->
-<view class="crowd-popup {{showPopup ? 'show' : ''}}" bindtap="hidePopup">
+<!-- 车辆信息弹窗 -->
+<view class="popup {{showPopup ? 'show' : ''}}" catchtap="hidePopup">
   <view class="popup-content" catchtap="stopPropagation">
     <view class="popup-handle"></view>
-    <view class="popup-close" bindtap="hidePopup">×</view>
-    <view class="popup-title">{{selectedBus.name}}</view>
-    <view class="crowd-info">
-      <text class="crowd-label">当前拥挤程度</text>
-      <text class="crowd-value {{selectedBus.crowdLevel}}">{{
-        selectedBus.crowdLevel === 'free' ? '空闲' :
-        selectedBus.crowdLevel === 'normal' ? '舒适' :
-        selectedBus.crowdLevel === 'crowded' ? '拥挤' : ''
-      }}</text>
+    <view class="popup-header">
+      <text class="popup-title">{{selectedBus.name}}</text>
+      <view class="popup-close" bindtap="hidePopup">×</view>
+    </view>
+    <view class="popup-body">
+      <view class="info-row">
+        <view class="info-item">
+          <text class="info-label">运动状态：</text>
+          <text class="status-text {{selectedBus.movementStatus}}">{{selectedBus.movementStatus === 'moving' ? '运动中' : '停靠中'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">拥挤程度：</text>
+          <text class="crowd-text {{selectedBus.crowdLevel}}">{{selectedBus.crowdLevel === 'free' ? '空闲' : selectedBus.crowdLevel === 'normal' ? '正常' : '拥挤'}}</text>
+        </view>
+      </view>
+      <view class="bus-details" wx:if="{{selectedBus.originalData}}">
+        <view class="detail-item" wx:if="{{selectedBus.originalData.angle !== undefined}}">
+          <text class="detail-label">方向：</text>
+          <text class="detail-value">{{selectedBus.originalData.angle}}°</text>
+        </view>
+        <view class="detail-item" wx:if="{{selectedBus.originalData.updateTime}}">
+          <text class="detail-label">更新时间：</text>
+          <text class="detail-value">{{selectedBus.originalData.updateTime}}</text>
+        </view>
+      </view>
     </view>
   </view>
 </view>
 
-<view class="menu-mask {{isMenuOpen ? 'show' : ''}}" bindtap="toggleMenu"></view>
-<view class="side-menu {{isMenuOpen ? 'open' : ''}}">
-  <view class="menu-list">
-    <view class="menu-item" bindtap="handleMenuItem" data-type="favorite">收藏的地点</view>
-    <view class="menu-item" bindtap="handleMenuItem" data-type="history">历史记录</view>
-    <view class="menu-item" bindtap="handleMenuItem" data-type="settings">设置</view>
-    <view class="menu-item" bindtap="handleMenuItem" data-type="about">关于</view>
+<!-- 巴士列表弹窗 -->
+<view class="bus-list-popup {{showBusList ? 'show' : ''}}" catchtap="closeBusList">
+  <view class="bus-list-content" catchtap="stopPropagation">
+    <view class="popup-handle"></view>
+    <view class="popup-header">
+      <text class="popup-title">巴士列表</text>
+      <view class="popup-close" bindtap="closeBusList">×</view>
+    </view>
+    <view class="bus-list-body">
+      <view class="bus-list-empty" wx:if="{{!markers || markers.length === 0}}">
+        <text>暂无可用的巴士数据</text>
+      </view>
+      <view class="bus-list" wx:else>
+        <block wx:for="{{sortedBusMarkers}}" wx:key="id">
+          <view class="bus-item" bindtap="jumpToBus" data-id="{{item.id}}">
+            <view class="bus-icon">
+              <image src="/image/bus.png" mode="aspectFit"></image>
+            </view>
+            <view class="bus-info">
+              <view class="bus-name">{{item.callout.content}}</view>
+              <view class="bus-status">
+                <text class="status-tag {{item.movementStatus}}">{{item.movementStatus === 'moving' ? '运动中' : '停靠中'}}</text>
+                <text class="crowd-tag {{item.crowdLevel}}">{{item.crowdLevel === 'free' ? '空闲' : item.crowdLevel === 'normal' ? '正常' : '拥挤'}}</text>
+              </view>
+            </view>
+            <view class="bus-arrow">
+              <text>›</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
   </view>
 </view>
 
-<!-- 添加底部导航栏 -->
-<view class="bottom-nav">
-  <button type="primary" class="nav-btn search-btn" bindtap="startSearch">搜索</button>
-  <button type="primary" class="nav-btn route-btn" bindtap="queryRoute">查询路线</button>
-  <view class="menu-btn" bindtap="toggleMenu">
-    <view class="menu-icon {{isMenuOpen ? 'open' : ''}}"></view>
+<!-- 底部工具条 -->
+<view class="bottom-toolbar">
+  <view class="toolbar-button search-button" bindtap="startSearch">
+    <view class="button-icon search-icon"></view>
+    <text>查巴士</text>
+  </view>
+  <view class="toolbar-button menu-button" bindtap="toggleMenu">
+    <view class="button-icon">
+      <view class="menu-icon"></view>
+    </view>
+    <text>菜单</text>
+  </view>
+</view>
+
+<!-- 菜单面板 -->
+<view class="menu-panel {{isMenuOpen ? 'open' : ''}}">
+  <view class="menu-overlay" bindtap="toggleMenu"></view>
+  <view class="menu-content">
+    <view class="menu-header">
+      <text class="menu-title">功能菜单</text>
+      <view class="menu-close" bindtap="toggleMenu">×</view>
+    </view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="toggleSatellite">
+        <view class="menu-item-icon satellite-icon"></view>
+        <text>{{mapLabel}}</text>
+      </view>
+      <view class="menu-item" bindtap="queryRoute">
+        <view class="menu-item-icon route-icon">
+          <view class="route-arrow-head"></view>
+        </view>
+        <text>查询路线</text>
+      </view>
+      <view class="menu-item" bindtap="coLinks">
+        <view class="menu-item-icon poi-icon"></view>
+        <text>友情链接</text>
+      </view>
+    </view>
   </view>
 </view>
 
